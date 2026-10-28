@@ -52,8 +52,9 @@ third-party libraries.
 
 ## 📸 Screenshots
 
-Terminal captures (SVG) from the English UI of Kruptos 1.0.0. Kruptos is a CLI; it
-has no graphical interface and no mobile version.
+Eight terminal captures (SVG) from the English UI of Kruptos 1.0.0, paired by task
+for Windows and Linux. Click any image to open the full-size capture. Kruptos is a
+CLI; it has no graphical interface and no mobile version.
 
 <div align="center">
   <table border="0">
@@ -66,10 +67,42 @@ has no graphical interface and no mobile version.
     <tbody>
       <tr>
         <td align="center" valign="middle">
-          <img src="docs/windows-powershell.svg" alt="Kruptos on Windows PowerShell" width="420" />
+          <a href="docs/windows-1-start.svg"><img src="docs/windows-1-start.svg" alt="Kruptos start screen on Windows" width="420" /></a><br />
+          <sub>Start screen</sub>
         </td>
         <td align="center" valign="middle">
-          <img src="docs/linux-terminal.svg" alt="Kruptos on Linux" width="420" />
+          <a href="docs/linux-1-start.svg"><img src="docs/linux-1-start.svg" alt="Kruptos start screen on Linux" width="420" /></a><br />
+          <sub>Start screen</sub>
+        </td>
+      </tr>
+      <tr>
+        <td align="center" valign="middle">
+          <a href="docs/windows-2-encrypt.svg"><img src="docs/windows-2-encrypt.svg" alt="Kruptos encryption on Windows" width="420" /></a><br />
+          <sub>Encrypt</sub>
+        </td>
+        <td align="center" valign="middle">
+          <a href="docs/linux-2-encrypt.svg"><img src="docs/linux-2-encrypt.svg" alt="Kruptos encryption on Linux" width="420" /></a><br />
+          <sub>Encrypt</sub>
+        </td>
+      </tr>
+      <tr>
+        <td align="center" valign="middle">
+          <a href="docs/windows-3-decrypt.svg"><img src="docs/windows-3-decrypt.svg" alt="Kruptos decryption on Windows" width="420" /></a><br />
+          <sub>Decrypt</sub>
+        </td>
+        <td align="center" valign="middle">
+          <a href="docs/linux-3-decrypt.svg"><img src="docs/linux-3-decrypt.svg" alt="Kruptos decryption on Linux" width="420" /></a><br />
+          <sub>Decrypt</sub>
+        </td>
+      </tr>
+      <tr>
+        <td align="center" valign="middle">
+          <a href="docs/windows-4-inspect.svg"><img src="docs/windows-4-inspect.svg" alt="Kruptos ID inspection on Windows" width="420" /></a><br />
+          <sub>Inspect</sub>
+        </td>
+        <td align="center" valign="middle">
+          <a href="docs/linux-4-inspect.svg"><img src="docs/linux-4-inspect.svg" alt="Kruptos ID inspection on Linux" width="420" /></a><br />
+          <sub>Inspect</sub>
         </td>
       </tr>
     </tbody>

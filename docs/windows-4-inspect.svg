@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="540" viewBox="0 0 900 540" role="img" aria-label="Kruptos ID inspection on Windows PowerShell">
+  <rect width="900" height="540" rx="14" fill="#0c0c0c"/>
+  <rect width="900" height="42" rx="14" fill="#1f1f1f"/>
+  <rect y="28" width="900" height="14" fill="#1f1f1f"/>
+  <circle cx="24" cy="21" r="7" fill="#ff5f56"/>
+  <circle cx="48" cy="21" r="7" fill="#ffbd2e"/>
+  <circle cx="72" cy="21" r="7" fill="#27c93f"/>
+  <text x="96" y="26" fill="#c9d1d9" font-family="Segoe UI, Arial, sans-serif" font-size="14">Windows PowerShell — kruptos</text>
+  <text x="26" y="82" xml:space="preserve" font-family="'Cascadia Mono', 'Consolas', monospace" font-size="16">
+    <tspan x="26" dy="0" fill="#4fc1ff">PS C:\Users\demo&gt; <tspan fill="#e6edf3">kruptos inspect -i KR1-...</tspan></tspan>
+    <tspan x="26" dy="24" fill="#4fc1ff">[*] Plan ID:</tspan>
+    <tspan x="26" dy="24" fill="#8b949e">  KR1-AEAAUIYB-FAQCUCAK-AQBCOUKY-5UV73CWO-...</tspan>
+    <tspan x="26" dy="24" fill="#e6edf3"></tspan>
+    <tspan x="26" dy="24" fill="#e6edf3">    Version:      1</tspan>
+    <tspan x="26" dy="24" fill="#e6edf3">    Protection:   None (the ID contains the seed)</tspan>
+    <tspan x="26" dy="24" fill="#e6edf3">    Layers:       10</tspan>
+    <tspan x="26" dy="24" fill="#e6edf3">    Seed:         32 bytes, fingerprint 3d694c2e</tspan>
+    <tspan x="26" dy="24" fill="#e6edf3"></tspan>
+    <tspan x="26" dy="24" fill="#4fc1ff">[*] Application order (from the first to the last layer):</tspan>
+    <tspan x="26" dy="24" fill="#e6edf3">      1.   chacha20          Cipher</tspan>
+    <tspan x="26" dy="24" fill="#e6edf3">      2.   base64            Encoding</tspan>
+    <tspan x="26" dy="24" fill="#e6edf3">      3.   percent           Encoding</tspan>
+    <tspan x="26" dy="24" fill="#8b949e">      ...</tspan>
+  </text>
+  <text x="26" y="516" fill="#6e7681" font-family="Segoe UI, Arial, sans-serif" font-size="12">Kruptos 1.0.0 · C++20 · static binary · Windows x64</text>
+</svg>

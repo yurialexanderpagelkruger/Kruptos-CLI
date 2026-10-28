@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="540" viewBox="0 0 900 540" role="img" aria-label="Kruptos decryption on Linux">
+  <rect width="900" height="540" rx="14" fill="#1e1e1e"/>
+  <rect width="900" height="42" rx="14" fill="#2d2d2d"/>
+  <rect y="28" width="900" height="14" fill="#2d2d2d"/>
+  <circle cx="24" cy="21" r="7" fill="#ff5f56"/>
+  <circle cx="48" cy="21" r="7" fill="#ffbd2e"/>
+  <circle cx="72" cy="21" r="7" fill="#27c93f"/>
+  <text x="96" y="26" fill="#c9d1d9" font-family="Segoe UI, Arial, sans-serif" font-size="14">Terminal — kruptos</text>
+  <text x="26" y="82" xml:space="preserve" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="16">
+    <tspan x="26" dy="0" fill="#6a9955">$ <tspan fill="#e6edf3">kruptos decrypt -i KR1-... -m "..." -v</tspan></tspan>
+    <tspan x="26" dy="24" fill="#4ec9b0">[+] Message decrypted and verified (9 layers reversed).</tspan>
+    <tspan x="26" dy="24" fill="#4fc1ff">[*] Reverse order applied:</tspan>
+    <tspan x="26" dy="24" fill="#e6edf3">      1.   rc4               Cipher</tspan>
+    <tspan x="26" dy="24" fill="#e6edf3">      2.   quoted-printable  Encoding</tspan>
+    <tspan x="26" dy="24" fill="#e6edf3">      3.   chacha20          Cipher</tspan>
+    <tspan x="26" dy="24" fill="#e6edf3">      4.   base32            Encoding</tspan>
+    <tspan x="26" dy="24" fill="#8b949e">      ...</tspan>
+    <tspan x="26" dy="24" fill="#4fc1ff">[*] Original message:</tspan>
+    <tspan x="26" dy="24" fill="#e6edf3">Hello, world!</tspan>
+  </text>
+  <text x="26" y="516" fill="#6e7681" font-family="Segoe UI, Arial, sans-serif" font-size="12">Kruptos 1.0.0 · static binary · Linux x86_64</text>
+</svg>
