@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="900" height="540" viewBox="0 0 900 540" role="img" aria-label="Kruptos en Linux">
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="540" viewBox="0 0 900 540" role="img" aria-label="Kruptos on Linux">
   <rect width="900" height="540" rx="14" fill="#1e1e1e"/>
   <rect width="900" height="42" rx="14" fill="#2d2d2d"/>
   <rect y="28" width="900" height="14" fill="#2d2d2d"/>
@@ -7,20 +7,20 @@
   <circle cx="72" cy="21" r="7" fill="#27c93f"/>
   <text x="96" y="26" fill="#c9d1d9" font-family="Segoe UI, Arial, sans-serif" font-size="14">Terminal — kruptos</text>
   <text x="26" y="82" xml:space="preserve" font-family="'JetBrains Mono', 'DejaVu Sans Mono', monospace" font-size="16">
-    <tspan x="26" dy="0" fill="#6a9955">$ <tspan fill="#e6edf3">kruptos --lang pt encrypt -m "Olá, mundo!"</tspan></tspan>
-    <tspan x="26" dy="27" fill="#4ec9b0">[+] Mensagem cifrada com 9 camadas em uma ordem diferente:</tspan>
-    <tspan x="26" dy="27" fill="#e6edf3">      1.   base32            Codificação</tspan>
-    <tspan x="26" dy="27" fill="#e6edf3">      2.   chacha20          Cifra</tspan>
-    <tspan x="26" dy="27" fill="#e6edf3">      3.   quoted-printable  Codificação</tspan>
+    <tspan x="26" dy="0" fill="#6a9955">$ <tspan fill="#e6edf3">kruptos encrypt -m "Hello, world!"</tspan></tspan>
+    <tspan x="26" dy="27" fill="#4ec9b0">[+] Message encrypted with 9 layers in a different order:</tspan>
+    <tspan x="26" dy="27" fill="#e6edf3">      1.   base32            Encoding</tspan>
+    <tspan x="26" dy="27" fill="#e6edf3">      2.   chacha20          Cipher</tspan>
+    <tspan x="26" dy="27" fill="#e6edf3">      3.   quoted-printable  Encoding</tspan>
     <tspan x="26" dy="27" fill="#8b949e">      ...</tspan>
-    <tspan x="26" dy="27" fill="#4fc1ff">[*] ID do plano (guarde-o junto ao texto cifrado):</tspan>
+    <tspan x="26" dy="27" fill="#4fc1ff">[*] Plan ID (keep it with the ciphertext):</tspan>
     <tspan x="26" dy="27" fill="#8b949e">KR1-AEAASBBC-AUBQWIBK-AETTYIRA-S4N7U5CE-...</tspan>
-    <tspan x="26" dy="27" fill="#4fc1ff">[*] Texto cifrado:</tspan>
+    <tspan x="26" dy="27" fill="#4fc1ff">[*] Ciphertext:</tspan>
     <tspan x="26" dy="27" fill="#8b949e">4d6d4a71525868785530784c6445684e...</tspan>
-    <tspan x="26" dy="27" fill="#6a9955">$ <tspan fill="#e6edf3">kruptos --lang pt decrypt -i KR1-... -m "..."</tspan></tspan>
-    <tspan x="26" dy="27" fill="#4ec9b0">[+] Mensagem decifrada e verificada (9 camadas revertidas).</tspan>
-    <tspan x="26" dy="27" fill="#4fc1ff">[*] Mensagem original:</tspan>
-    <tspan x="26" dy="27" fill="#e6edf3">Olá, mundo!</tspan>
+    <tspan x="26" dy="27" fill="#6a9955">$ <tspan fill="#e6edf3">kruptos decrypt -i KR1-... -m "..."</tspan></tspan>
+    <tspan x="26" dy="27" fill="#4ec9b0">[+] Message decrypted and verified (9 layers reversed).</tspan>
+    <tspan x="26" dy="27" fill="#4fc1ff">[*] Original message:</tspan>
+    <tspan x="26" dy="27" fill="#e6edf3">Hello, world!</tspan>
   </text>
-  <text x="26" y="516" fill="#6e7681" font-family="Segoe UI, Arial, sans-serif" font-size="12">Kruptos 1.0.0 · binário estático · Linux x86_64</text>
+  <text x="26" y="516" fill="#6e7681" font-family="Segoe UI, Arial, sans-serif" font-size="12">Kruptos 1.0.0 · static binary · Linux x86_64</text>
 </svg>

@@ -4,58 +4,56 @@
 ![Windows](https://img.shields.io/badge/Windows-x64%20%7C%20Win32-0078D6?style=flat-square)
 ![Linux](https://img.shields.io/badge/Linux-x86__64%20%7C%20aarch64-FCC624?style=flat-square)
 ![Tests](https://img.shields.io/badge/tests-579%2F579-success?style=flat-square)
-![Idiomas](https://img.shields.io/badge/i18n-es%20%7C%20en%20%7C%20pt-blueviolet?style=flat-square)
+![Languages](https://img.shields.io/badge/i18n-en%20%7C%20es%20%7C%20pt-blueviolet?style=flat-square)
 
-**Kruptos** es un cifrador multicapa por línea de comandos que transforma un
-mensaje de texto plano en un bloque cifrado mediante una cadena de 7 a 12 capas
-de cifrado y codificación, elegidas y ordenadas para cada mensaje. Cada ejecución
-produce un texto cifrado en ASCII imprimible y un ID `KR1-...` que registra el plan
-exacto y la semilla necesaria para revertirlo.
+**Kruptos** is a multi-layer command-line encryptor that turns plaintext into a
+ciphertext through a chain of 7 to 12 encryption and encoding layers, selected and
+ordered for each message. Every run produces printable ASCII ciphertext and a
+`KR1-...` ID that records the exact plan and the seed required to reverse it.
 
-Diseñado específicamente para desarrolladores, administradores de sistemas,
-equipos de seguridad y usuarios técnicos que necesitan cifrar textos desde
-PowerShell, CMD o una terminal Linux sin depender de servicios web, runtimes ni
-instaladores pesados, *Kruptos* elimina el encadenamiento manual de utilidades y
-lo reemplaza por un único comando portable y reproducible.
+Designed specifically for developers, system administrators, security teams, and
+technical users who need to encrypt text from PowerShell, CMD, or a Linux terminal
+without relying on web services, runtimes, or heavyweight installers, *Kruptos*
+replaces manual tool chaining with a single portable and reproducible command.
 
-Con C++20, 26 métodos reversibles, un ID autodescriptivo, verificación de
-integridad y binarios estáticos, el proyecto permite cifrar, descifrar e
-inspeccionar mensajes en Windows y Linux sin instalar Visual C++ Redistributable,
-.NET ni librerías de terceros.
+With C++20, 26 reversible methods, a self-describing ID, integrity verification,
+and static binaries, the project lets you encrypt, decrypt, and inspect messages on
+Windows and Linux without installing the Visual C++ Redistributable, .NET, or any
+third-party libraries.
 
 > [!IMPORTANT]
-> Sin contraseña, el ID contiene la semilla y la lista de capas: **quien tenga el
-> ID puede descifrar**. Usa `-p` para proteger el plan con ChaCha20 + HMAC-SHA-256
-> y PBKDF2. Kruptos es una herramienta de cifrado multicapa y ofuscación; no
-> sustituye a GPG/age para comunicaciones de alto valor.
+> Without a password, the ID contains the seed and the layer plan: **anyone with
+> the ID can decrypt**. Use `-p` to protect the plan with ChaCha20 + HMAC-SHA-256
+> and PBKDF2. Kruptos is a multi-layer encryption and obfuscation tool; it is not a
+> replacement for GPG/age for high-value communications.
 
 ---
 
-## 📑 Índice
+## 📑 Table of Contents
 
-1. [Capturas de pantalla](#-capturas-de-pantalla)
-2. [Características principales](#-características-principales)
-3. [¿Qué hace?](#-qué-hace-módulos-disponibles)
-4. [Tecnologías utilizadas](#-tecnologías-utilizadas)
-5. [Instalación y uso](#-instalación-y-uso)
-6. [Cómo funciona](#-cómo-funciona)
-7. [Repertorio de métodos](#-repertorio-de-métodos)
-8. [Seguridad y modelo de amenaza](#-seguridad-y-modelo-de-amenaza)
-9. [Pruebas y calidad](#-pruebas-y-calidad)
-10. [Distribución y releases](#-distribución-y-releases)
-11. [Estructura del proyecto](#-estructura-del-proyecto)
-12. [Preguntas frecuentes](#-preguntas-frecuentes)
-13. [Solución de problemas](#-solución-de-problemas)
+1. [Screenshots](#-screenshots)
+2. [Key Features](#-key-features)
+3. [What It Does (Modules)](#-what-it-does-modules)
+4. [Technologies](#-technologies)
+5. [Installation and Usage](#-installation-and-usage)
+6. [How It Works](#-how-it-works)
+7. [Method Repertoire](#-method-repertoire)
+8. [Security and Threat Model](#-security-and-threat-model)
+9. [Tests and Quality](#-tests-and-quality)
+10. [Distribution and Releases](#-distribution-and-releases)
+11. [Project Structure](#-project-structure)
+12. [FAQ](#-faq)
+13. [Troubleshooting](#-troubleshooting)
 14. [Roadmap](#-roadmap)
-15. [Autor](#-autor)
-16. [Licencia](#-licencia)
+15. [Author](#-author)
+16. [License](#-license)
 
 ---
 
-## 📸 Capturas de pantalla
+## 📸 Screenshots
 
-Capturas de terminal (SVG) basadas en la salida real de Kruptos 1.0.0.
-La aplicación es una CLI; no tiene interfaz gráfica ni versión móvil.
+Terminal captures (SVG) from the English UI of Kruptos 1.0.0. Kruptos is a CLI; it
+has no graphical interface and no mobile version.
 
 <div align="center">
   <table border="0">
@@ -68,10 +66,10 @@ La aplicación es una CLI; no tiene interfaz gráfica ni versión móvil.
     <tbody>
       <tr>
         <td align="center" valign="middle">
-          <img src="docs/windows-powershell.svg" alt="Kruptos en Windows PowerShell" width="420" />
+          <img src="docs/windows-powershell.svg" alt="Kruptos on Windows PowerShell" width="420" />
         </td>
         <td align="center" valign="middle">
-          <img src="docs/linux-terminal.svg" alt="Kruptos en Linux" width="420" />
+          <img src="docs/linux-terminal.svg" alt="Kruptos on Linux" width="420" />
         </td>
       </tr>
     </tbody>
@@ -80,136 +78,135 @@ La aplicación es una CLI; no tiene interfaz gráfica ni versión móvil.
 
 ---
 
-## ✨ Características principales
+## ✨ Key Features
 
-* **Cifrado multicapa adaptativo:** en cada ejecución se aplican entre 7 y 12
-  métodos distintos de un repertorio de 26, en un orden diferente, sin repetir
-  ninguno dentro del mismo plan. La selección y el orden los decide el CSPRNG del
-  sistema (`BCryptGenRandom` en Windows, `getrandom`/`/dev/urandom` en Linux).
+* **Adaptive multi-layer encryption:** each run applies 7 to 12 distinct methods
+  from a 26-method repertoire, in a different order, without repeating a method
+  inside the same plan. The system CSPRNG (`BCryptGenRandom` on Windows,
+  `getrandom`/`/dev/urandom` on Linux) selects the methods and the order.
 
-* **ID autodescriptivo `KR1-...`:** el identificador contiene la lista de métodos,
-  la semilla maestra de 32 bytes y una huella del texto cifrado. No hay base de
-  datos, servidor ni estado local: el ID es portable entre máquinas y se puede
-  mostrar con `kruptos inspect`.
+* **Self-describing `KR1-...` ID:** the identifier stores the method list, the
+  32-byte master seed, and a fingerprint of the ciphertext. There is no database,
+  server, or local state: the ID is portable across machines and can be inspected
+  with `kruptos inspect`.
 
-* **Descifrado inverso con verificación real:** Kruptos revierte las capas en
-  orden inverso, vuelve a aplicar el plan sobre el mensaje recuperado y compara la
-  huella. Si el ID, el texto o la contraseña no coinciden, devuelve un error en
-  lugar de un mensaje corrupto.
+* **Verified reverse decryption:** Kruptos reverts every layer in reverse order,
+  re-applies the plan to the recovered message, and compares the fingerprint. A
+  wrong ID, a damaged ciphertext, or a wrong password produces an error instead of
+  silent corruption.
 
-* **Contraseña opcional con autenticación:** `-p` protege el plan y la semilla con
-  PBKDF2-HMAC-SHA256 (150 000 iteraciones), ChaCha20 y HMAC-SHA-256. El ID deja de
-  ser suficiente para descifrar y una contraseña incorrecta o un ID manipulado se
-  detectan por el MAC.
+* **Optional authenticated password:** `-p` protects the plan and seed with
+  PBKDF2-HMAC-SHA256 (150,000 iterations), ChaCha20, and HMAC-SHA-256. The ID alone
+  is no longer enough to decrypt, and a wrong password or tampered ID is detected
+  by the MAC.
 
-* **Portable y sin dependencias:** C++20 con CRT estática en Windows y enlace
-  estático en Linux. El ejecutable Release no depende de `VCRUNTIME140.dll`,
-  `MSVCP140.dll`, `ucrtbase.dll` ni de una versión concreta de libstdc++; se puede
-  copiar y ejecutar sin instalar nada.
+* **Portable and dependency-free:** C++20 with the static CRT on Windows and static
+  linking on Linux. The Release executable does not depend on `VCRUNTIME140.dll`,
+  `MSVCP140.dll`, `ucrtbase.dll`, or a specific libstdc++ version; it can be copied
+  and run without installing anything.
 
-* **CLI completa y shell interactivo:** comandos al estilo Nmap (`encrypt`,
-  `decrypt`, `inspect`, `methods`, `selftest`, `language`), opciones para mensaje,
-  ID, archivos, salida, capas y contraseña, entrada por tubería, JSON, modo
-  silencioso y un shell con prompts para uso manual.
+* **Complete CLI plus interactive shell:** Nmap-style commands (`encrypt`,
+  `decrypt`, `inspect`, `methods`, `selftest`, `language`), flags for messages, IDs,
+  files, output, layers, and passwords, stdin piping, JSON, quiet mode, and a
+  prompt-driven shell for manual use.
 
-* **Interfaz trilingüe y UTF-8:** español, inglés y portugués; detección del idioma
-  del sistema, `--lang`, `KRUPTOS_LANG` y un selector numérico dentro del shell.
-  Soporta acentos, emoji y rutas Unicode en Windows y Linux.
-
----
-
-## ⚙️ ¿Qué hace? (Módulos disponibles)
-
-Desde la lectura del mensaje hasta la verificación final, *Kruptos* implementa los
-siguientes componentes:
-
-1. **CLI, comandos y shell interactivo (`src/cli.cpp`):** parsea argumentos y
-   opciones, resuelve el mensaje/ID desde `-m`, `-f` o stdin, ejecuta los comandos,
-   gestiona JSON/modo silencioso, archivos de salida, prompts de contraseña,
-   selector de idioma y el shell `kruptos>`.
-
-2. **Internacionalización (`src/i18n.cpp`):** catálogo de 156 mensajes en español,
-   inglés y portugués, detección del idioma del sistema, códigos `es`/`en`/`pt` y
-   sustitución de placeholders para textos con valores dinámicos.
-
-3. **Motor de capas (`src/pipeline.cpp`):** construye el plan, selecciona métodos
-   aplicables, controla presupuestos de expansión, aplica y revierte las capas,
-   calcula la huella del texto cifrado y valida la integridad al descifrar.
-
-4. **Repertorio de métodos (`src/methods.cpp`, `src/encoding.cpp`):** 12 cifrados y
-   14 codificaciones reversibles, con reglas de aplicabilidad, presupuesto de
-   tamaño y decodificadores estrictos que detectan entradas mal formadas.
-
-5. **Criptografía e identificadores (`src/crypto.cpp`, `src/token.cpp`):** SHA-256,
-   HMAC-SHA-256, PBKDF2, ChaCha20, comparación en tiempo constante, serialización
-   Base32 del ID, checksum, cifrado del plan y autenticación con contraseña.
-
-6. **Entropía, terminal y pruebas (`src/rng.cpp`, `src/terminal.cpp`,
-   `src/selftest.cpp`):** CSPRNG del sistema, derivación de claves por paso,
-   consola UTF-8 con colores ANSI, lectura oculta de contraseña y 579 aserciones
-   internas de vectores, round-trip, IDs e integridad.
+* **Trilingual UTF-8 interface:** English, Spanish, and Portuguese; automatic
+  system-language detection, `--lang`, `KRUPTOS_LANG`, and a numeric selector inside
+  the shell. Accents, emoji, and Unicode file paths work on Windows and Linux.
 
 ---
 
-## 🛠️ Tecnologías utilizadas
+## ⚙️ What It Does (Modules)
 
-* **Lenguaje y compilación:** C++20 (`std::span`, `std::filesystem`,
-  `std::optional`), CMake 3.20+, MSBuild/Visual Studio 2026 (toolset v145),
-  GCC/Clang, CRT estática (`/MT`, `/MTd`), enlace `-static` en Linux y GitHub
-  Actions.
+From message input to final verification, *Kruptos* implements the following
+components:
 
-* **Criptografía:** ChaCha20 (RFC 8439), SHA-256 (FIPS 180-4), HMAC-SHA-256
-  (RFC 2104), PBKDF2-HMAC-SHA256 (RFC 8018), CSPRNG del sistema y comparación en
-  tiempo constante.
+1. **CLI, commands, and interactive shell (`src/cli.cpp`):** parses arguments and
+   flags, resolves the message/ID from `-m`, `-f`, or stdin, runs commands, handles
+   JSON/quiet mode, output files, password prompts, the language selector, and the
+   `kruptos>` shell.
 
-* **Codificaciones:** Base16, Base32, Base64, Base64URL, Base58, Ascii85,
-  percent-encoding, quoted-printable, binario, octal, decimal, escapes Unicode,
-  entidades HTML y morse.
+2. **Internationalization (`src/i18n.cpp`):** a catalog of 156 messages in English,
+   Spanish, and Portuguese, system-language detection, `en`/`es`/`pt` codes, and
+   placeholder substitution for dynamic text.
 
-* **Plataformas y UX:** Windows x64/Win32, Linux x86_64/aarch64, PowerShell, CMD y
-  Bash, consola UTF-8, colores ANSI, JSON, archivos, tuberías y una interfaz en tres
-  idiomas.
+3. **Layer engine (`src/pipeline.cpp`):** builds the plan, selects applicable
+   methods, enforces expansion budgets, applies and reverts layers, computes the
+   ciphertext fingerprint, and validates integrity during decryption.
+
+4. **Method repertoire (`src/methods.cpp`, `src/encoding.cpp`):** 12 ciphers and 14
+   reversible encodings, with applicability rules, size budgets, and strict decoders
+   that reject malformed input.
+
+5. **Cryptography and identifiers (`src/crypto.cpp`, `src/token.cpp`):** SHA-256,
+   HMAC-SHA-256, PBKDF2, ChaCha20, constant-time comparison, Base32 ID serialization,
+   checksums, plan encryption, and password authentication.
+
+6. **Entropy, terminal, and tests (`src/rng.cpp`, `src/terminal.cpp`,
+   `src/selftest.cpp`):** system CSPRNG, per-step key derivation, UTF-8 console with
+   ANSI colors, hidden password input, and 579 internal assertions covering vectors,
+   round-trips, IDs, and integrity.
 
 ---
 
-## 🚀 Instalación y uso
+## 🛠️ Technologies
 
-Kruptos se distribuye como **ejecutable portable** en Windows y **binario estático**
-en Linux. Esta versión no publica instaladores MSI/UAC ni paquetes `.deb`, `.rpm` o
-`.AppImage`; el objetivo es un único archivo que se pueda copiar y ejecutar.
+* **Language and build:** C++20 (`std::span`, `std::filesystem`, `std::optional`),
+  CMake 3.20+, MSBuild/Visual Studio 2026 (toolset v145), GCC/Clang, static CRT
+  (`/MT`, `/MTd`), `-static` linking on Linux, and GitHub Actions.
 
-### Windows — Variante B: ejecutable portable
+* **Cryptography:** ChaCha20 (RFC 8439), SHA-256 (FIPS 180-4), HMAC-SHA-256
+  (RFC 2104), PBKDF2-HMAC-SHA256 (RFC 8018), the system CSPRNG, and constant-time
+  comparison.
 
-1. Descarga el paquete `Kruptos-windows-x64.zip` desde la sección
-   [**Releases**](../../releases) y extrae su contenido.
+* **Encodings:** Base16, Base32, Base64, Base64URL, Base58, Ascii85,
+  percent-encoding, quoted-printable, binary, octal, decimal, Unicode escapes, HTML
+  entities, and Morse code.
 
-2. Ejecuta una sola vez:
+* **Platforms and UX:** Windows x64/Win32, Linux x86_64/aarch64, PowerShell, CMD, and
+  Bash, UTF-8 console, ANSI colors, JSON, files, pipes, and a trilingual interface.
+
+---
+
+## 🚀 Installation and Usage
+
+Kruptos is distributed as a **portable executable** on Windows and a **static
+binary** on Linux. This version does not ship MSI/UAC installers, `.deb`, `.rpm`, or
+`.AppImage` packages; the goal is a single file that can be copied and executed.
+
+### Windows — Variant B: portable executable
+
+1. Download `Kruptos-windows-x64.zip` from the [**Releases**](../../releases)
+   section and extract it.
+
+2. Run once:
 
    ```powershell
    .\install.cmd
    ```
 
-   El instalador portable copia `kruptos.exe` a
-   `%LOCALAPPDATA%\Programs\Kruptos` y agrega esa carpeta al PATH del usuario.
-   **No solicita administrador (UAC), no toca el PATH del sistema y no instala
-   runtimes.**
+   The portable installer copies `kruptos.exe` to
+   `%LOCALAPPDATA%\Programs\Kruptos` and adds that folder to the user PATH.
+   **It does not request Administrator (UAC), does not modify the system PATH, and
+   does not install runtimes.**
 
-3. Abre una **nueva** PowerShell y comprueba:
+3. Open a **new** PowerShell window and verify:
 
    ```powershell
    kruptos --help
    kruptos version
-   kruptos encrypt -m "Hola mundo"
+   kruptos encrypt -m "Hello world"
    ```
 
-   Si no quieres abrir otra ventana, refresca el PATH en la sesión actual:
+   If you do not want to open another window, refresh the PATH in the current
+   session:
 
    ```powershell
    $env:Path = [Environment]::GetEnvironmentVariable('Path','Machine') + ';' + [Environment]::GetEnvironmentVariable('Path','User')
    kruptos --help
    ```
 
-4. También puedes usarlo sin tocar el PATH:
+4. You can also use it without touching PATH:
 
    ```powershell
    .\kruptos.exe --help
@@ -217,25 +214,26 @@ en Linux. Esta versión no publica instaladores MSI/UAC ni paquetes `.deb`, `.rp
    & "$env:LOCALAPPDATA\Programs\Kruptos\kruptos.exe" --help
    ```
 
-**Desinstalar:**
+**Uninstall:**
 
 ```powershell
 .\install.ps1 -Uninstall
 ```
 
-**Notas de Windows:**
+**Windows notes:**
 
-- El `.exe` está compilado con CRT estática. Verificado con `dumpbin`: solo depende
-  de `bcrypt.dll`, `SHELL32.dll` y `KERNEL32.dll`, todas del sistema.
-- No requiere Visual C++ Redistributable, .NET, Python ni permisos elevados.
-- El ejecutable no está firmado digitalmente. Si SmartScreen advierte, elige
-  **Más información → Ejecutar de todas formas**.
-- Para actualizar la copia instalada, vuelve a ejecutar `install.cmd`.
+- The executable uses the static CRT. Verified with `dumpbin`: it only depends on
+  `bcrypt.dll`, `SHELL32.dll`, and `KERNEL32.dll`, all system components.
+- It does not require the Visual C++ Redistributable, .NET, Python, or elevated
+  permissions.
+- The executable is not code-signed. If SmartScreen warns, choose **More info →
+  Run anyway**.
+- To update the installed copy, run `install.cmd` again.
 
-### Linux — Variante D adaptada: binario estático
+### Linux — Adapted Variant D: static binary
 
-1. Descarga `Kruptos-linux-<arch>.tar.gz` desde
-   [**Releases**](../../releases) y extrae el paquete:
+1. Download `Kruptos-linux-<arch>.tar.gz` from
+   [**Releases**](../../releases) and extract it:
 
    ```bash
    mkdir -p Kruptos-linux
@@ -243,81 +241,81 @@ en Linux. Esta versión no publica instaladores MSI/UAC ni paquetes `.deb`, `.rp
    cd Kruptos-linux
    ```
 
-2. Instala en tu directorio de usuario, sin `sudo`:
+2. Install into your user directory, without `sudo`:
 
    ```bash
    chmod +x install.sh
    ./install.sh
    ```
 
-   El instalador copia el binario a `~/.local/bin/kruptos`. Si esa carpeta no está
-   en el PATH, muestra la línea `export PATH=...` que debes añadir a `~/.profile`,
-   `~/.bashrc` o `~/.zshrc`.
+   The installer copies the binary to `~/.local/bin/kruptos`. If that directory is
+   not on PATH, it prints the `export PATH=...` line to add to `~/.profile`,
+   `~/.bashrc`, or `~/.zshrc`.
 
-3. Abre una terminal nueva y comprueba:
+3. Open a new terminal and verify:
 
    ```bash
    kruptos --help
    kruptos version
-   kruptos encrypt -m "Hola mundo"
+   kruptos encrypt -m "Hello world"
    ```
 
-4. Sin instalar:
+4. Without installing:
 
    ```bash
    chmod +x kruptos
    ./kruptos --help
    ```
 
-**Desinstalar:**
+**Uninstall:**
 
 ```bash
 ./install.sh --uninstall
 ```
 
-**Notas de Linux:**
+**Linux notes:**
 
-- El binario se enlaza con `-DKRUPTOS_STATIC=ON`: no necesita libstdc++/glibc
-  instaladas en el equipo destino, solo el kernel de Linux de la misma arquitectura.
-- No hay paquetes `.deb`, `.rpm` ni `.AppImage` en esta versión; el binario estático
-  es el formato portable.
-- En equipos ARM64, compila en esa arquitectura con `./build.sh --static` o usa el
-  artefacto correspondiente.
-- La compilación estática necesita las librerías estáticas del compilador
-  (`libstdc++.a`, `libgcc.a`) **solo en la máquina que compila**.
+- The binary is linked with `-DKRUPTOS_STATIC=ON`: it does not need libstdc++/glibc
+  installed on the target machine, only a Linux kernel for the same architecture.
+- This version does not publish `.deb`, `.rpm`, or `.AppImage` packages; the static
+  binary is the portable format.
+- On ARM64 machines, build on that architecture with `./build.sh --static` or use
+  the matching artifact.
+- Static linking requires the compiler's static libraries (`libstdc++.a`,
+  `libgcc.a`) **only on the build machine**.
 
-### Compilar desde el código fuente
+### Build from Source
 
 ```bash
-git clone https://github.com/TU-USUARIO/Kruptos-CLI.git
+git clone https://github.com/YOUR-USERNAME/Kruptos-CLI.git
 cd Kruptos-CLI
 ```
 
-Sustituye `TU-USUARIO` por tu usuario de GitHub.
+Replace `YOUR-USERNAME` with your GitHub username.
 
 **Windows (Visual Studio 2026):**
 
 ```powershell
-# Abre Kruptos.slnx y pulsa F5, o compila desde PowerShell:
+# Open Kruptos.slnx and press F5, or build from PowerShell:
 .\build.ps1
 
-# Paquete portable: dist\ + Kruptos-windows-x64.zip
+# Portable package: dist\ + Kruptos-windows-x64.zip
 .\publish.ps1
 ```
 
-El proyecto usa el toolset `v145`, C++20, x64/Win32 y CRT estática. Enlaza
-`bcrypt.lib` y `shell32.lib`.
+The project uses toolset `v145`, C++20, x64/Win32, and the static CRT. It links
+`bcrypt.lib` and `shell32.lib`.
 
 **Linux (CMake + GCC/Clang):**
 
 ```bash
 chmod +x build.sh install.sh publish-linux.sh
-./build.sh              # binario dinámico
-./build.sh --static     # binario autocontenido
+./build.sh              # dynamic binary
+./build.sh --static     # self-contained binary
 ./publish-linux.sh      # dist/linux-<arch>/ + Kruptos-linux-<arch>.tar.gz
 ```
 
-También:
+Alternatively:
 
 ```bash
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DKRUPTOS_STATIC=ON
@@ -325,137 +323,151 @@ cmake --build build --parallel
 ctest --test-dir build --output-on-failure
 ```
 
-**CI:** `.github/workflows/build.yml` compila y prueba Windows x64 y Linux x86_64,
-y publica los artefactos `Kruptos-windows-x64.zip` y
-`Kruptos-linux-x86_64.tar.gz`.
+**CI:** `.github/workflows/build.yml` builds and tests Windows x64 and Linux x86_64
+and publishes the `Kruptos-windows-x64.zip` and `Kruptos-linux-x86_64.tar.gz`
+artifacts.
 
-### Verificar la instalación
+### Verify the Installation
 
 ```powershell
-kruptos version      # versión, motor y métodos
-kruptos selftest     # 579 pruebas internas
-kruptos methods      # repertorio completo
+kruptos version      # version, engine, and methods
+kruptos selftest     # 579 internal tests
+kruptos methods      # full repertoire
 ```
 
-En Linux, `ldd "$(command -v kruptos)"` debe indicar `not a dynamic executable` (o
-similar) si el binario es estático. En Windows, `dumpbin /dependents kruptos.exe`
-debe mostrar solo DLLs del sistema.
+On Linux, `ldd "$(command -v kruptos)"` should report `not a dynamic executable`
+(or similar) for a static build. On Windows, `dumpbin /dependents kruptos.exe`
+should list only system DLLs.
 
-### Opciones de la CLI
+### CLI Commands
 
-| Opción | Descripción |
+| Command | Description |
 | --- | --- |
-| `-m, --message <texto>` | Mensaje o texto cifrado. Si se omite, se pide por consola o se lee de stdin. |
-| `-i, --id <ID>` | Identificador `KR1-...` necesario para descifrar e inspeccionar. |
-| `-f, --file <ruta>` | Lee el mensaje de un archivo UTF-8 (elimina un salto de línea final). |
-| `-o, --output <ruta>` | Guarda el resultado en un archivo (cifrado o mensaje). |
-| `-l, --layers <n>` | Fuerza el número de capas (1-16). |
-| `-p, --password` | Pide una contraseña oculta para proteger el ID. |
-| `--passphrase <texto>` | Contraseña en la línea de comandos (menos segura, para scripts). |
-| `-L, --lang <idioma>` | Idioma de la interfaz: `es`, `en` o `pt`. |
-| `-v, --verbose` | Muestra el detalle de las capas al descifrar. |
-| `-j, --json` | Salida JSON para automatización. |
-| `-q, --quiet` | Solo el resultado. |
-| `--no-color` | Desactiva los colores ANSI. |
-| `-h, --help` | Ayuda completa (incluye créditos). |
-| `-V, --version` | Versión. |
+| `encrypt` | Encrypt a message (default command). |
+| `decrypt` | Decrypt a message with its ID. |
+| `inspect` | Show the layer plan of an ID. |
+| `methods` | List the available methods. |
+| `selftest` | Run the internal test suite. |
+| `language` | Change the UI language (`es`, `en`, `pt`). |
+| `help` | Show help, including credits. |
+| `version` | Show the version. |
+| `shell` | Start the interactive shell. |
 
-### Primeros comandos
+### CLI Options
+
+| Option | Description |
+| --- | --- |
+| `-m, --message <text>` | Message or ciphertext. If omitted, it is prompted for or read from stdin. |
+| `-i, --id <ID>` | `KR1-...` identifier required to decrypt and inspect. |
+| `-f, --file <path>` | Read the message from a UTF-8 file (a trailing newline is removed). |
+| `-o, --output <path>` | Save the result (ciphertext or message) to a file. |
+| `-l, --layers <n>` | Force the number of layers (1-16). |
+| `-p, --password` | Prompt for a hidden password to protect the ID. |
+| `--passphrase <text>` | Password on the command line (less secure, intended for scripts). |
+| `-L, --lang <language>` | UI language: `es`, `en`, or `pt`. |
+| `-v, --verbose` | Show layer details when decrypting. |
+| `-j, --json` | JSON output for automation. |
+| `-q, --quiet` | Result only. |
+| `--no-color` | Disable ANSI colors. |
+| `-h, --help` | Full help (includes credits). |
+| `-V, --version` | Version. |
+
+### First Commands
 
 ```powershell
-# Cifrar pidiendo el mensaje por consola
+# Encrypt, prompting for the message
 kruptos encrypt
 
-# Cifrar un mensaje y forzar 10 capas
-kruptos encrypt -m "Reunión a las 19:30 en el café" -l 10
+# Encrypt a message and force 10 layers
+kruptos encrypt -m "Meeting at 7:30 PM at the cafe" -l 10
 
-# Descifrar con el ID y el texto que devolvió el comando anterior
+# Decrypt with the ID and ciphertext returned by the previous command
 kruptos decrypt -i "KR1-..." -m "..."
 
-# Ver el plan de capas de un ID
+# Show the layer plan of an ID
 kruptos inspect -i "KR1-..."
 
-# Listar los 26 métodos
+# List the 26 methods
 kruptos methods
 
-# Cambiar el idioma
+# Change the language
 kruptos language
 ```
 
-### Ejemplos detallados
+### Detailed Examples
 
-**1. Cifrado y descifrado básico**
+**1. Basic encryption and decryption**
 
 ```powershell
-$salida = kruptos encrypt -m "Hola mundo" -q
-$id     = $salida[0]
-$cifra  = $salida[1]
+$output = kruptos encrypt -m "Hello world" -q
+$id     = $output[0]
+$cipher = $output[1]
 
-kruptos decrypt -i $id -m $cifra -q
-# Hola mundo
+kruptos decrypt -i $id -m $cipher -q
+# Hello world
 ```
 
-**2. ID protegido con contraseña**
+**2. Password-protected ID**
 
 ```powershell
-kruptos encrypt -m "Secreto" -p
-# Pide la contraseña dos veces y muestra el ID + texto cifrado
+kruptos encrypt -m "Secret" -p
+# Prompts for the password twice and prints the ID + ciphertext
 
-kruptos decrypt -i "KR1-..." -m "..." 
-# Pide la contraseña si el ID está protegido
+kruptos decrypt -i "KR1-..." -m "..."
+# Prompts for the password if the ID is protected
 ```
 
-En scripts:
+For scripts:
 
 ```powershell
-kruptos encrypt -m "Secreto" --passphrase "una-clave-larga" -q
-kruptos decrypt -i "KR1-..." -m "..." --passphrase "una-clave-larga" -q
+kruptos encrypt -m "Secret" --passphrase "a-long-password" -q
+kruptos decrypt -i "KR1-..." -m "..." --passphrase "a-long-password" -q
 ```
 
-**3. Archivos y tuberías**
+**3. Files and pipes**
 
 ```powershell
-Get-Content .\mensaje.txt | kruptos encrypt -o .\cifrado.txt
-kruptos decrypt -f .\cifrado.txt -i "KR1-..." -o .\original.txt
+Get-Content .\message.txt | kruptos encrypt -o .\cipher.txt
+kruptos decrypt -f .\cipher.txt -i "KR1-..." -o .\original.txt
 ```
 
 ```bash
-cat mensaje.txt | kruptos encrypt -o cifrado.txt
-kruptos decrypt -f cifrado.txt -i "KR1-..." -o original.txt
+cat message.txt | kruptos encrypt -o cipher.txt
+kruptos decrypt -f cipher.txt -i "KR1-..." -o original.txt
 ```
 
-**4. Automatización con JSON**
+**4. JSON automation**
 
 ```powershell
-$resultado = kruptos encrypt -m "Hola" -j | ConvertFrom-Json
-$resultado.id
-$resultado.layers
-$resultado.methods
+$result = kruptos encrypt -m "Hello" -j | ConvertFrom-Json
+$result.id
+$result.layers
+$result.methods
 
-kruptos decrypt -i $resultado.id -m $resultado.ciphertext -j | ConvertFrom-Json
+kruptos decrypt -i $result.id -m $result.ciphertext -j | ConvertFrom-Json
 ```
 
-**5. Modo silencioso**
+**5. Quiet mode**
 
 ```text
-kruptos encrypt -m "Hola" -q
-<ID en la primera línea>
-<texto cifrado en la segunda línea>
+kruptos encrypt -m "Hello" -q
+<ID on the first line>
+<ciphertext on the second line>
 
-kruptos decrypt -i <ID> -m <texto> -q
-Hola
+kruptos decrypt -i <ID> -m <ciphertext> -q
+Hello
 ```
 
-**6. Inspección y detalle**
+**6. Inspection and details**
 
 ```powershell
 kruptos inspect -i "KR1-..." -v
 kruptos decrypt -i "KR1-..." -m "..." -v
 ```
 
-### Modo interactivo
+### Interactive Shell
 
-Sin argumentos se abre un shell:
+Running without arguments opens a shell:
 
 ```text
 $ kruptos
@@ -465,10 +477,10 @@ $ kruptos
  | . \| |  | |_| | |_) | || (_) \__ \
  |_|\_\_|   \__,_| .__/  \__\___/|___/
                  |_|
-  Cifrado multicapa adaptativo  ·  v1.0.0
+  Adaptive multi-layer encryption  ·  v1.0.0
 
-[*] Modo interactivo. Escribe 'help' para ver los comandos, 'language' para
-    cambiar el idioma y 'exit' para salir.
+[*] Interactive mode. Type 'help' for commands, 'language' to change the language,
+    and 'exit' to quit.
 
 kruptos> encrypt
 kruptos> decrypt
@@ -478,19 +490,19 @@ kruptos> language
 kruptos> exit
 ```
 
-El shell admite comillas simples y dobles, rutas con espacios y el comando
-`language` con selector numérico.
+The shell supports single and double quotes, paths with spaces, and the `language`
+command with a numbered selector.
 
-### Idiomas
+### Languages
 
-Orden de detección:
+Detection order:
 
-1. `--lang` / `-L` de la ejecución.
-2. Variable de entorno `KRUPTOS_LANG`.
-3. Idioma del sistema (Windows UI o `LC_ALL` / `LC_MESSAGES` / `LANG`).
-4. Inglés si no se reconoce.
+1. `--lang` / `-L` on the command line.
+2. The `KRUPTOS_LANG` environment variable.
+3. The system language (Windows UI, or `LC_ALL` / `LC_MESSAGES` / `LANG`).
+4. English if no language is recognized.
 
-El selector del comando `language` muestra:
+The `language` selector shows:
 
 ```text
 1. English
@@ -498,338 +510,341 @@ El selector del comando `language` muestra:
 3. Português
 ```
 
-El cambio afecta a la ejecución/sesión actual. Para fijarlo:
+The change applies to the current run/session. To make it persistent:
 
 ```powershell
-$env:KRUPTOS_LANG = "es"
+$env:KRUPTOS_LANG = "en"
 ```
 
 ```bash
-export KRUPTOS_LANG=pt
+export KRUPTOS_LANG=es
 ```
 
-O en cada comando:
+Or per command:
 
 ```powershell
-kruptos --lang en --help
+kruptos --lang es --help
 kruptos -L pt version
 ```
 
-### Solución rápida de problemas de uso
+### Quick Troubleshooting
 
-| Síntoma | Solución |
+| Symptom | Fix |
 | --- | --- |
-| `kruptos` no se reconoce | Abre una PowerShell nueva o refresca el PATH; comprueba `Get-Command kruptos`. |
-| La política de ejecución bloquea `.ps1` | Usa `install.cmd` (aplica `-ExecutionPolicy Bypass` solo a su proceso) o `powershell -ExecutionPolicy Bypass -File .\install.ps1`. |
-| SmartScreen advierte | El ejecutable no está firmado; usa “Más información → Ejecutar de todas formas”. |
-| `kruptos` abre una versión antigua | Reinstala con `install.cmd`; `Get-Command kruptos` muestra la ruta. |
-| No aparece el ID | El ID se imprime antes del texto cifrado; en modo `-q` es la primera línea. |
-| “Verificación de integridad fallida” | El texto cifrado no corresponde al ID o está incompleto; vuelve a copiarlo entero. |
-| “Contraseña incorrecta o ID alterado” | Revisa la contraseña/ID; el MAC protege el plan. |
-| Falta el ID | Sin el ID no se puede descifrar; no hay recuperación. |
-| Mensaje largo en Windows | La línea de comandos ronda los 32 KB; usa `-f` o stdin en lugar de `-m`. |
-| Colores raros en la terminal | Usa `--no-color` o define `NO_COLOR=1`. |
-| Linux no encuentra `kruptos` | Añade `~/.local/bin` al PATH o ejecuta `./kruptos` directamente. |
+| `kruptos` is not recognized | Open a new PowerShell window or refresh PATH; check `Get-Command kruptos`. |
+| Execution policy blocks `.ps1` | Use `install.cmd` (it applies `-ExecutionPolicy Bypass` only to its process) or `powershell -ExecutionPolicy Bypass -File .\install.ps1`. |
+| SmartScreen warning | The executable is not signed; choose “More info → Run anyway”. |
+| `kruptos` opens an old version | Reinstall with `install.cmd`; `Get-Command kruptos` shows the path. |
+| The ID is missing | The ID is printed before the ciphertext; in `-q` mode it is the first line. |
+| “Integrity check failed” | The ciphertext does not match the ID or is incomplete; copy it again in full. |
+| “Wrong password or altered ID” | Check the password/ID; the MAC protects the plan. |
+| Missing ID | Without the ID the message cannot be decrypted; there is no recovery. |
+| Long message on Windows | The command line is limited to roughly 32 KB; use `-f` or stdin instead of `-m`. |
+| Odd terminal colors | Use `--no-color` or set `NO_COLOR=1`. |
+| Linux cannot find `kruptos` | Add `~/.local/bin` to PATH or run `./kruptos` directly. |
 
 ---
 
-## 🔐 Cómo funciona
+## 🔐 How It Works
 
-### Flujo de una operación
-
-```text
-Mensaje de texto
-      │
-      ▼
-[ capa 1 ] → [ capa 2 ] → [ capa 3 ] → ... → [ capa N ]
-      │
-      ▼
-Texto cifrado (ASCII imprimible, sin espacios)
-      │
-      ├── ID KR1: versión + métodos + semilla + huella
-      │
-      ▼
-Descifrado: N → ... → 3 → 2 → 1 → verificación
-```
-
-1. El mensaje se lee desde `-m`, `-f`, stdin o el prompt.
-2. El motor elige entre 7 y 12 métodos distintos y los ordena con el CSPRNG.
-3. Cada capa transforma el resultado de la anterior.
-4. La última capa es siempre una codificación compacta (sin espacios), para que el
-   texto se pueda copiar y pegar.
-5. Se construye el ID con el plan, la semilla de 32 bytes y una huella del texto.
-6. Al descifrar se revierte el plan y se vuelve a cifrar para verificar la huella.
-
-### Selección y orden de capas
-
-- Repertorio de 26 métodos: 12 cifrados y 14 codificaciones.
-- Por defecto se aplican entre 7 y 12 métodos, sin repetir ninguno.
-- `-l 1..16` fuerza un número exacto (con reintentos para encontrar un plan viable).
-- El motor descarta métodos no aplicables (por ejemplo, morse con bytes no
-  representables o base58 con buffers grandes).
-- Se aplica un presupuesto de expansión para que una cadena de codificaciones no
-  convierta un mensaje corto en megabytes: base de 4 KB / 32× el mensaje, con topes
-  por paso y por resultado final.
-- Si la selección no puede completar el objetivo, el modo libre acepta una cadena
-  algo más corta; el modo `-l` avisa con un error claro.
-
-### Derivación de material clave
-
-La semilla maestra (32 bytes) se genera con el CSPRNG. Cada capa deriva sus
-parámetros con:
+### Operation Flow
 
 ```text
-HMAC-SHA256(semilla, "Kruptos/keystream/v1" || paso || método || contador)
+Plaintext message
+      │
+      ▼
+[ layer 1 ] → [ layer 2 ] → [ layer 3 ] → ... → [ layer N ]
+      │
+      ▼
+Ciphertext (printable ASCII, no spaces)
+      │
+      ├── KR1 ID: version + methods + seed + fingerprint
+      │
+      ▼
+Decryption: N → ... → 3 → 2 → 1 → verification
 ```
 
-Así, el ID no necesita guardar una clave por capa: basta la semilla y el plan. Los
-cifrados que necesitan clave/nonce, longitud de clave, desplazamiento o número de
-rieles obtienen esos valores del flujo derivado, de forma determinista, tanto al
-cifrar como al descifrar.
+1. The message is read from `-m`, `-f`, stdin, or a prompt.
+2. The engine selects 7 to 12 distinct methods and orders them with the CSPRNG.
+3. Each layer transforms the output of the previous layer.
+4. The final layer is always a compact encoding (no spaces), so the ciphertext can
+   be copied and pasted.
+5. The ID is built from the plan, the 32-byte seed, and a ciphertext fingerprint.
+6. During decryption, the plan is reversed and re-applied to verify the fingerprint.
 
-### El ID KR1
+### Layer Selection and Ordering
+
+- 26-method repertoire: 12 ciphers and 14 encodings.
+- By default, 7 to 12 methods are applied without repetition.
+- `-l 1..16` forces an exact number (with retries to find a viable plan).
+- The engine skips methods that do not apply (for example, Morse with
+  non-representable bytes or Base58 with large buffers).
+- An expansion budget keeps a chain of encodings from turning a short message into
+  megabytes: a 4 KB / 32× message base with per-step and final-output caps.
+- If a random plan cannot complete the target, free mode accepts a slightly shorter
+  chain; `-l` mode reports a clear error.
+
+### Key Material Derivation
+
+The 32-byte master seed is generated by the CSPRNG. Each layer derives its
+parameters with:
 
 ```text
-KR1-<Base32 del payload, grupos de 8 caracteres separados por ->
+HMAC-SHA256(seed, "Kruptos/keystream/v1" || step || method || counter)
 ```
 
-El ID es autocontenido y portable. Se acepta en mayúsculas o minúsculas, con o sin
-guiones, y se ignoran espacios/saltos de línea. `inspect` muestra la versión,
-protección, número de capas, huella de la semilla y orden de aplicación.
+The ID therefore does not need to store a key per layer: the seed and the plan are
+enough. Ciphers that need a key/nonce, key length, shift, or rail count obtain those
+values from the derived stream deterministically, both when encrypting and when
+decrypting.
 
-### Verificación de integridad
+### The KR1 ID
 
-Después de revertir todas las capas, Kruptos vuelve a aplicar el plan al mensaje
-recuperado y compara el fingerprint almacenado en el ID. Esto detecta:
+```text
+KR1-<Base32 payload, groups of 8 characters separated by ->
+```
 
-- un texto cifrado alterado o incompleto;
-- un ID que no corresponde a ese texto;
-- una contraseña incorrecta (además del MAC);
-- corrupción durante la copia/pegado.
+The ID is self-contained and portable. It is accepted in uppercase or lowercase,
+with or without dashes, and whitespace/newlines are ignored. `inspect` shows the
+version, protection, layer count, seed fingerprint, and application order.
 
-La comprobación es de 32 bits (truncado de SHA-256) para el fingerprint del texto;
-el checksum/MAC del ID protege la estructura del plan. En modo sin contraseña, el
-checksum detecta errores accidentales, pero no es una firma: un atacante puede
-recalcularlo. En modo con contraseña, el MAC autentica el plan.
+### Integrity Verification
 
-### Protección con contraseña
+After reversing every layer, Kruptos re-applies the plan to the recovered message
+and compares the fingerprint stored in the ID. This detects:
 
-Con `-p` o `--passphrase`:
+- an altered or incomplete ciphertext;
+- an ID that does not belong to that ciphertext;
+- a wrong password (in addition to the MAC);
+- corruption during copy/paste.
 
-- Se genera una sal de 16 bytes y un nonce de 12 bytes.
-- PBKDF2-HMAC-SHA256 con 150 000 iteraciones deriva 64 bytes: 32 para ChaCha20 y 32
-  para HMAC.
-- El plan+semilla se cifra con ChaCha20.
-- Se autentica con HMAC-SHA256 truncado a 16 bytes.
-- Una contraseña incorrecta o un ID manipulado fallan antes de descifrar.
+The ciphertext fingerprint is 32 bits (truncated SHA-256); the ID checksum/MAC
+protects the plan structure. In passwordless mode, the checksum detects accidental
+errors but is not a signature: an attacker can recompute it. In password mode, the
+MAC authenticates the plan.
 
-### Formato binario del ID
+### Password Protection
 
-**Sin contraseña (`flags = 0`):**
+With `-p` or `--passphrase`:
 
-| Campo | Tamaño |
+- A 16-byte salt and a 12-byte nonce are generated.
+- PBKDF2-HMAC-SHA256 with 150,000 iterations derives 64 bytes: 32 for ChaCha20 and
+  32 for HMAC.
+- The plan+seed is encrypted with ChaCha20.
+- It is authenticated with HMAC-SHA256 truncated to 16 bytes.
+- A wrong password or tampered ID fails before decryption.
+
+### Binary ID Format
+
+**Without a password (`flags = 0`):**
+
+| Field | Size |
 | --- | --- |
-| versión | 1 byte (`1`) |
+| version | 1 byte (`1`) |
 | flags | 1 byte |
-| número de capas | 1 byte |
-| IDs de método, en orden | *n* bytes |
-| semilla maestra | 32 bytes |
-| huella del texto cifrado | 4 bytes |
-| SHA-256 del payload anterior (primeros 4 bytes) | 4 bytes |
+| layer count | 1 byte |
+| method IDs, in order | *n* bytes |
+| master seed | 32 bytes |
+| ciphertext fingerprint | 4 bytes |
+| SHA-256 of the previous payload (first 4 bytes) | 4 bytes |
 
-**Con contraseña (`flags = 1`):**
+**With a password (`flags = 1`):**
 
-| Campo | Tamaño |
+| Field | Size |
 | --- | --- |
-| versión + flags | 2 bytes |
-| sal PBKDF2 | 16 bytes |
-| nonce ChaCha20 | 12 bytes |
-| plan cifrado (ChaCha20) | variable |
-| HMAC-SHA-256 truncado | 16 bytes |
+| version + flags | 2 bytes |
+| PBKDF2 salt | 16 bytes |
+| ChaCha20 nonce | 12 bytes |
+| encrypted plan (ChaCha20) | variable |
+| truncated HMAC-SHA-256 | 16 bytes |
 
-Todo el payload se serializa en Base32 y se agrupa en bloques de 8 caracteres para
-facilitar la copia.
+The entire payload is serialized as Base32 and grouped into 8-character blocks to
+make it easier to copy.
 
-### Límites y rendimiento
+### Limits and Performance
 
-| Límite | Valor |
+| Limit | Value |
 | --- | --- |
-| Mensaje máximo | 128 KB |
-| Capas por plan | 1-16 (`-l`), 7-12 por defecto |
-| Texto cifrado máximo | 16 MB |
-| Línea de comandos en Windows | ~32 KB; usa archivos/stdin para mensajes grandes |
-| Base58 | Solo buffers ≤ 4096 bytes (aritmética O(n²)) |
-| Morse | Solo caracteres representables en su tabla |
-| Salida final | ASCII imprimible sin espacios |
+| Maximum message | 128 KB |
+| Layers per plan | 1-16 (`-l`), 7-12 by default |
+| Maximum ciphertext | 16 MB |
+| Windows command line | ~32 KB; use files/stdin for larger messages |
+| Base58 | Buffers ≤ 4096 bytes only (O(n²) arithmetic) |
+| Morse | Only characters represented in its table |
+| Final output | Printable ASCII without spaces |
 
-En un equipo moderno, un mensaje de 100 KB se cifra/descifra en décimas de segundo
-(el tamaño y el tiempo dependen del plan). Todo el mensaje se procesa en memoria.
+On a modern machine, a 100 KB message encrypts/decrypts in fractions of a second
+(size and time depend on the plan). The entire message is processed in memory.
 
 ---
 
-## 🧩 Repertorio de métodos
+## 🧩 Method Repertoire
 
-Kruptos aplica cada método como máximo una vez por plan. Los identificadores son
-estables y forman parte del formato del ID: **no los renumeres** si añades métodos.
+Kruptos applies each method at most once per plan. The identifiers are stable and
+are part of the ID format: **do not renumber them** when adding methods.
 
-### Cifrados (12)
+### Ciphers (12)
 
-| ID | Método | Descripción |
+| ID | Method | Description |
 | ---: | --- | --- |
-| 1 | `chacha20` | Flujo ChaCha20 (RFC 8439) con clave y nonce generados. |
-| 2 | `rc4` | Flujo RC4 con clave generada (capa heredada de ruido). |
-| 3 | `sha256-ctr` | Flujo XOR derivado de SHA-256 en modo contador. |
-| 4 | `caesar` | Desplazamiento aditivo de cada byte módulo 256. |
-| 5 | `vigenere` | Suma módulo 256 con clave repetida. |
-| 6 | `atbash` | Complemento a 255 de cada byte. |
-| 7 | `rot13` | Rotación de 13 posiciones en letras A-Z/a-z. |
-| 8 | `rot47` | Rotación de 47 posiciones en ASCII imprimible (33-126). |
-| 9 | `reverse` | Inversión completa del orden de los bytes. |
-| 10 | `bit-rotate` | Rotación de bits dentro de cada byte. |
-| 11 | `nibble-swap` | Intercambio de los dos nibbles de cada byte. |
-| 12 | `rail-fence` | Transposición en zigzag con 2-6 rieles. |
+| 1 | `chacha20` | ChaCha20 stream cipher (RFC 8439) with a fresh key and nonce. |
+| 2 | `rc4` | RC4 stream cipher with a fresh key (legacy noise layer). |
+| 3 | `sha256-ctr` | XOR stream derived from SHA-256 in counter mode. |
+| 4 | `caesar` | Additive shift of every byte modulo 256. |
+| 5 | `vigenere` | Modulo-256 addition with a repeating key. |
+| 6 | `atbash` | 255's complement of every byte. |
+| 7 | `rot13` | 13-position rotation on A-Z/a-z letters. |
+| 8 | `rot47` | 47-position rotation on printable ASCII (33-126). |
+| 9 | `reverse` | Full reversal of byte order. |
+| 10 | `bit-rotate` | Bit rotation inside every byte. |
+| 11 | `nibble-swap` | Swap of both nibbles in every byte. |
+| 12 | `rail-fence` | Zigzag transposition with 2-6 rails. |
 
-### Codificaciones (14)
+### Encodings (14)
 
-| ID | Método | Descripción |
+| ID | Method | Description |
 | ---: | --- | --- |
-| 32 | `base64` | Base64 estándar con relleno (RFC 4648). |
-| 33 | `base64url` | Base64 variante URL sin relleno. |
-| 34 | `base32` | Base32 RFC 4648 sin relleno. |
-| 35 | `base16` | Hexadecimal en minúsculas. |
-| 36 | `base58` | Base58 estilo Bitcoin (buffers ≤ 4096 bytes). |
-| 37 | `base85` | Ascii85 delimitado con `<~ ~>`. |
-| 38 | `percent` | Codificación porcentual de URL (`%XX`). |
-| 39 | `quoted-printable` | Quoted-printable sin saltos de línea. |
-| 40 | `binary` | Bits de cada byte separados por espacios. |
-| 41 | `octal` | Valores octal de 3 dígitos separados por espacios. |
-| 42 | `decimal` | Valores decimales 0-255 separados por espacios. |
-| 43 | `unicode-escape` | Secuencias `\u00XX` por byte. |
-| 44 | `html-entities` | Entidades numéricas `&#NNN;` por byte. |
-| 45 | `morse` | Código morse (marca `*` para minúsculas; `/` para espacio). |
+| 32 | `base64` | Standard Base64 with padding (RFC 4648). |
+| 33 | `base64url` | URL-safe Base64 without padding. |
+| 34 | `base32` | RFC 4648 Base32 without padding. |
+| 35 | `base16` | Lowercase hexadecimal. |
+| 36 | `base58` | Bitcoin-style Base58 (buffers ≤ 4096 bytes). |
+| 37 | `base85` | Ascii85 delimited with `<~ ~>`. |
+| 38 | `percent` | URL percent-encoding (`%XX`). |
+| 39 | `quoted-printable` | Quoted-printable without line breaks. |
+| 40 | `binary` | Bits of every byte separated by spaces. |
+| 41 | `octal` | 3-digit octal values separated by spaces. |
+| 42 | `decimal` | Decimal values 0-255 separated by spaces. |
+| 43 | `unicode-escape` | `\u00XX` sequences per byte. |
+| 44 | `html-entities` | Numeric entities `&#NNN;` per byte. |
+| 45 | `morse` | Morse code (`*` marks lowercase; `/` for space). |
 
-**Reglas del motor:**
+**Engine rules:**
 
-- Los métodos de decodificación son estrictos: una entrada mal formada produce un
-  error, no un mensaje silencioso.
-- La última capa es una codificación compacta para que el texto cifrado no tenga
-  espacios ni caracteres de control.
-- Las capas que expanden demasiado se omiten según el presupuesto.
-- `base58` se reserva para buffers pequeños por su complejidad cuadrática.
-- `morse` solo se aplica si todos los bytes están en su tabla.
-- Los identificadores de método no deben cambiar entre versiones.
+- Decoders are strict: malformed input produces an error, not a silent message.
+- The last layer is a compact encoding so the ciphertext contains no spaces or
+  control characters.
+- Layers that expand too much are skipped according to the budget.
+- `base58` is limited to small buffers because of its quadratic complexity.
+- `morse` is applied only when every byte is in its table.
+- Method identifiers must not change across versions.
 
 ---
 
-## 🔐 Seguridad y modelo de amenaza
+## 🔐 Security and Threat Model
 
-Kruptos combina primitivas modernas con capas de codificación y transformaciones
-clásicas. La seguridad depende del modo de uso; conviene ser explícito sobre el
-modelo.
+Kruptos combines modern primitives with encoding layers and classic
+transformations. Security depends on the usage mode, so the model is stated
+explicitly.
 
-### Sin contraseña
+### Without a Password
 
-- El ID contiene la semilla de 32 bytes y la lista de capas. **Quien tenga el ID
-  puede descifrar.**
-- El texto cifrado por sí solo no revela el plan ni la semilla; sin el ID hay que
-  descubrir la combinación y el orden de capas, además de la semilla.
-- Las capas aportan difusión y oscurecimiento; no son un secreto de clave.
-- El checksum de 4 bytes detecta errores accidentales, pero **no autentica** el ID:
-  un atacante puede modificarlo y recalcularlo.
-- Envía el ID y el texto cifrado por canales distintos si no usas contraseña.
+- The ID contains the 32-byte seed and the layer list. **Anyone with the ID can
+  decrypt.**
+- The ciphertext alone does not reveal the plan or the seed; without the ID, an
+  attacker must discover the method combination and order, plus the seed.
+- Layers provide diffusion and obfuscation; they are not a key secret.
+- The 4-byte checksum detects accidental errors but **does not authenticate** the
+  ID: an attacker can modify it and recompute the checksum.
+- Send the ID and ciphertext over separate channels when not using a password.
 
-### Con contraseña (`-p`)
+### With a Password (`-p`)
 
-- El plan y la semilla se cifran con ChaCha20 y se autentican con HMAC-SHA-256.
-- PBKDF2-HMAC-SHA256 (150 000 iteraciones) deriva 64 bytes de la contraseña.
-- Una contraseña incorrecta o un ID manipulado fallan por el MAC.
-- El ID por sí solo no permite descifrar; la contraseña es imprescindible.
-- Usa una contraseña larga y única; no la reutilices.
+- The plan and seed are encrypted with ChaCha20 and authenticated with HMAC-SHA-256.
+- PBKDF2-HMAC-SHA256 (150,000 iterations) derives 64 bytes from the password.
+- A wrong password or a tampered ID fails the MAC check.
+- The ID alone is not enough; the password is required.
+- Use a long, unique password and do not reuse it.
 
-### Qué protege y qué no
+### What It Protects and What It Does Not
 
-| Escenario | Sin contraseña | Con contraseña |
+| Scenario | Without a password | With a password |
 | --- | --- | --- |
-| Confidencialidad si el atacante no tiene el ID | Sí | Sí |
-| Confidencialidad si el atacante tiene el ID | No | Sí, sin la contraseña |
-| Detección de corrupción accidental | Checksum de 4 bytes | MAC de 16 bytes |
-| Autenticidad del plan frente a un atacante activo | No | Sí (MAC) |
-| Recuperación si se pierde el ID | No | No |
-| Recuperación si se olvida la contraseña | N/A | No |
+| Confidentiality if the attacker lacks the ID | Yes | Yes |
+| Confidentiality if the attacker has the ID | No | Yes, without the password |
+| Accidental corruption detection | 4-byte checksum | 16-byte MAC |
+| Plan authenticity against an active attacker | No | Yes (MAC) |
+| Recovery if the ID is lost | No | No |
+| Recovery if the password is forgotten | N/A | No |
 
-### Buenas prácticas
+### Best Practices
 
-1. Usa `-p` si el ID viaja junto al texto o si necesitas confidencialidad real.
-2. Guarda una copia del ID; sin él no hay recuperación.
-3. Prueba el descifrado antes de borrar el mensaje original.
-4. No publiques ID y texto cifrado en el mismo canal sin contraseña.
-5. Usa `--passphrase` solo en entornos controlados: puede quedar en el historial y
-   en la lista de procesos.
-6. Para secretos de alto valor, usa GPG/age, un gestor de secretos o un protocolo
-   con clave pública y forward secrecy.
-7. Verifica la procedencia del binario (hash/firma) cuando esté disponible.
-8. Mantén actualizado el binario y revisa los cambios de seguridad.
+1. Use `-p` if the ID travels with the ciphertext or if you need real
+   confidentiality.
+2. Keep a copy of the ID; there is no recovery without it.
+3. Test decryption before deleting the original message.
+4. Do not publish the ID and ciphertext on the same channel without a password.
+5. Use `--passphrase` only in controlled environments: it may appear in shell
+   history and the process list.
+6. For high-value secrets, use GPG/age, a secrets manager, or a protocol with public
+   keys and forward secrecy.
+7. Verify the binary's provenance (hash/signature) when available.
+8. Keep the binary updated and review security-relevant changes.
 
-### Lo que Kruptos no hace
+### What Kruptos Does Not Do
 
-- No implementa intercambio de claves ni forward secrecy.
-- No oculta metadatos (tamaño, hora, nombre de archivo, etc.).
-- No borra de forma segura el mensaje original ni la memoria del proceso.
-- No protege contra un equipo comprometido, keyloggers o malware.
-- No sustituye una auditoría de seguridad ni un protocolo de mensajería seguro.
-- No es una herramienta de esteganografía.
+- It does not implement key exchange or forward secrecy.
+- It does not hide metadata (size, time, file name, etc.).
+- It does not securely erase the original message or process memory.
+- It does not protect against a compromised machine, keyloggers, or malware.
+- It is not a security audit or a secure messaging protocol.
+- It is not a steganography tool.
 
-### Auditoría
+### Audit
 
-Kruptos no ha sido auditado por terceros. El código y las pruebas están disponibles
-para revisión; si lo usas en producción, haz tu propia evaluación.
+Kruptos has not been audited by a third party. The code and tests are available for
+review; if you use it in production, perform your own assessment.
 
 ---
 
-## 🧪 Pruebas y calidad
+## 🧪 Tests and Quality
 
-### Ejecutar las pruebas
+### Running the Tests
 
 ```powershell
-kruptos selftest          # resumen
-kruptos selftest -v       # detalle de cada aserción
+kruptos selftest          # summary
+kruptos selftest -v       # per-assertion detail
 ```
 
 ```bash
 kruptos selftest -v
 ```
 
-### Cobertura actual
+### Current Coverage
 
-- Vectores conocidos de SHA-256, HMAC-SHA-256, PBKDF2 y ChaCha20 (RFC 8439).
-- Round-trip de los 26 métodos con datos binarios, Unicode y variados.
-- Pruebas de formato inválido en Base64, Base16, binario y quoted-printable.
-- Serialización/reversión de IDs, IDs alterados, IDs truncados y contraseñas.
-- Cifrado/descifrado completo con planes de 7-12 capas, verificación de integridad,
-  determinismo del plan y detección de texto alterado.
-- Repertorio: IDs y nombres únicos, métodos resolubles.
+- Known-answer vectors for SHA-256, HMAC-SHA-256, PBKDF2, and ChaCha20 (RFC 8439).
+- Round-trips for all 26 methods with binary, Unicode, and varied data.
+- Invalid-format tests for Base64, Base16, binary, and quoted-printable.
+- ID serialization/reversal, altered IDs, truncated IDs, and passwords.
+- Full encrypt/decrypt runs with 7-12 layer plans, integrity verification, plan
+  determinism, and tampered-ciphertext detection.
+- Repertoire checks: unique, resolvable IDs and names.
 
-Actualmente son **579 aserciones**. El comando `selftest` las ejecuta en el idioma
-activo; los detalles técnicos de cada aserción se muestran en inglés.
+There are currently **579 assertions**. The `selftest` command runs them in the
+active language; technical assertion details are shown in English.
 
-### Integración continua
+### Continuous Integration
 
-`.github/workflows/build.yml` compila y prueba:
+`.github/workflows/build.yml` builds and tests:
 
-- Windows x64 con CMake/MSVC y CRT estática.
-- Linux x86_64 con enlace `-static`.
-- Publica los ZIP/TAR de distribución como artefactos.
+- Windows x64 with CMake/MSVC and the static CRT.
+- Linux x86_64 with `-static`.
+- Publishes the distribution ZIP/TAR as artifacts.
 
-### Nota de honestidad
+### Honest Note
 
-Kruptos no ha sido auditado por terceros ni sometido a un programa formal de
-fuzzing. Las pruebas internas cubren vectores, round-trip y casos de error, pero no
-garantizan ausencia de fallos. Revisa el código y el modelo de seguridad antes de
-usarlo para proteger información crítica.
+Kruptos has not been audited by a third party or subjected to a formal fuzzing
+program. The internal tests cover vectors, round-trips, and error cases, but they do
+not guarantee the absence of bugs. Review the code and security model before using
+it to protect critical information.
 
 ---
 
-## 📦 Distribución y releases
+## 📦 Distribution and Releases
+
+Kruptos publishes binaries through **Releases**. It does not use **Deployments**
+(there is no hosted web app/API) or **Packages** (it is not published to npm, PyPI,
+Docker, Maven, or GitHub Packages).
 
 ### Windows
 
@@ -838,11 +853,11 @@ usarlo para proteger información crítica.
 .\publish.ps1 -Platform Win32 # x86
 ```
 
-Genera:
+Generates:
 
-- `dist\kruptos.exe` (autocontenido).
+- `dist\kruptos.exe` (self-contained).
 - `dist\install.cmd`, `dist\install.ps1`, `dist\LEEME.txt`, `dist\LEEME.md`.
-- `Kruptos-windows-x64.zip` (o `-Win32`).
+- `Kruptos-windows-x64.zip` (or `-Win32`).
 
 ### Linux
 
@@ -850,25 +865,30 @@ Genera:
 ./publish-linux.sh
 ```
 
-Genera:
+Generates:
 
-- `dist/linux-<arch>/kruptos` (estático).
+- `dist/linux-<arch>/kruptos` (static).
 - `dist/linux-<arch>/install.sh`.
 - `dist/linux-<arch>/LEEME.txt`.
 - `Kruptos-linux-<arch>.tar.gz`.
 
-### Qué contiene cada paquete
+### Current Release
 
-| Paquete | Contenido | Instalación |
-| --- | --- | --- |
-| `Kruptos-windows-x64.zip` | `kruptos.exe`, `install.cmd`, `install.ps1`, LEEME | `install.cmd` (usuario, sin admin) |
-| `Kruptos-linux-x86_64.tar.gz` | `kruptos`, `install.sh`, LEEME | `./install.sh` (usuario, sin root) |
+The **v1.0.0** release includes:
 
-### Verificar que es estático
+| Asset | Contents |
+| --- | --- |
+| `Kruptos-windows-x64.zip` | `kruptos.exe`, `install.cmd`, `install.ps1`, README |
+| `Kruptos-linux-x86_64.tar.gz` | static `kruptos`, `install.sh` |
+| `SHA256SUMS.txt` | SHA-256 checksums for both binaries |
+
+The release tag was built and tested by GitHub Actions on Windows and Linux.
+
+### Verifying Static Linking
 
 ```powershell
 dumpbin /dependents .\dist\kruptos.exe
-# Solo bcrypt.dll, SHELL32.dll, KERNEL32.dll
+# Only bcrypt.dll, SHELL32.dll, KERNEL32.dll
 ```
 
 ```bash
@@ -878,223 +898,219 @@ ldd ./dist/kruptos
 
 ---
 
-## 🗂️ Estructura del proyecto
+## 🗂️ Project Structure
 
 ```text
 .
 ├── .github/
 │   └── workflows/
-│       └── build.yml              CI Windows + Linux
+│       └── build.yml              CI: Windows + Linux
 ├── docs/
-│   ├── windows-powershell.svg     Captura de terminal Windows
-│   └── linux-terminal.svg         Captura de terminal Linux
+│   ├── windows-powershell.svg     Windows terminal capture
+│   └── linux-terminal.svg         Linux terminal capture
 ├── src/
-│   ├── main.cpp                   Entrada (UTF-16 -> UTF-8 en Windows)
-│   ├── cli.cpp/.h                 Comandos, opciones, shell, JSON
-│   ├── i18n.cpp/.h                Textos es/en/pt y selector
-│   ├── pipeline.cpp/.h            Plan, cifrado/descifrado, verificación
-│   ├── methods.cpp/.h             Repertorio de 26 métodos
-│   ├── encoding.cpp/.h            Codificaciones reversibles
-│   ├── token.cpp/.h               ID KR1, checksum, protección
+│   ├── main.cpp                   Entry point (UTF-16 -> UTF-8 on Windows)
+│   ├── cli.cpp/.h                 Commands, options, shell, JSON
+│   ├── i18n.cpp/.h                en/es/pt messages and selector
+│   ├── pipeline.cpp/.h            Plan, encryption/decryption, verification
+│   ├── methods.cpp/.h             26-method repertoire
+│   ├── encoding.cpp/.h            Reversible encodings
+│   ├── token.cpp/.h               KR1 ID, checksum, protection
 │   ├── crypto.cpp/.h              SHA-256, HMAC, PBKDF2, ChaCha20
-│   ├── rng.cpp/.h                 CSPRNG y derivación por paso
-│   ├── terminal.cpp/.h            Consola UTF-8, colores, contraseñas
-│   ├── common.cpp/.h              Tipos y utilidades
-│   └── selftest.cpp/.h            579 pruebas internas
-├── Kruptos.slnx / Kruptos.vcxproj Proyecto Visual Studio 2026
-├── CMakeLists.txt                 Build multiplataforma (CMake)
-├── build.ps1 / build.sh           Compilación
-├── install.ps1 / install.cmd      Instalador portable Windows
-├── install.sh                     Instalador portable Linux
-├── publish.ps1 / publish-linux.sh Paquetes portables
+│   ├── rng.cpp/.h                 CSPRNG and per-step derivation
+│   ├── terminal.cpp/.h            UTF-8 console, colors, passwords
+│   ├── common.cpp/.h              Types and utilities
+│   └── selftest.cpp/.h            579 internal tests
+├── Kruptos.slnx / Kruptos.vcxproj Visual Studio 2026 project
+├── CMakeLists.txt                 Cross-platform CMake build
+├── build.ps1 / build.sh           Build scripts
+├── install.ps1 / install.cmd      Portable Windows installer
+├── install.sh                     Portable Linux installer
+├── publish.ps1 / publish-linux.sh Portable packages
 └── README.md
 ```
 
-Generados y no versionados: `bin/`, `obj/`, `dist/`, `build/`, `build-static/`,
+Generated and not versioned: `bin/`, `obj/`, `dist/`, `build/`, `build-static/`,
 `Kruptos-windows-*.zip`, `Kruptos-linux-*.tar.gz`.
 
 ---
 
-## ❓ Preguntas frecuentes
+## ❓ FAQ
 
-### ¿Kruptos reemplaza a GPG o age?
+### Does Kruptos replace GPG or age?
 
-No. Kruptos es una herramienta de cifrado multicapa y ofuscación con un modelo
-simétrico simple (el ID contiene la semilla si no usas contraseña). Para
-comunicaciones de alto valor, usa GPG/age o un protocolo con clave pública y
-forward secrecy.
+No. Kruptos is a multi-layer encryption and obfuscation tool with a simple
+symmetric model (the ID contains the seed if you do not use a password). For
+high-value communications, use GPG/age or a protocol with public keys and forward
+secrecy.
 
-### ¿Envía datos a Internet?
+### Does it send data to the Internet?
 
-No. Kruptos no contiene código de red, telemetría ni actualizaciones automáticas.
-Todo se ejecuta localmente.
+No. Kruptos contains no network code, telemetry, or automatic updates. Everything
+runs locally.
 
-### ¿El ID es secreto?
+### Is the ID secret?
 
-Sin contraseña, **sí**: contiene la semilla y el plan. Con `-p`, el plan y la
-semilla van cifrados y autenticados; el ID por sí solo no permite descifrar.
+Without a password, **yes**: it contains the seed and the plan. With `-p`, the plan
+and seed are encrypted and authenticated; the ID alone cannot decrypt.
 
-### ¿Puedo reutilizar el mismo ID?
+### Can I reuse the same ID?
 
-Cada cifrado crea un plan y un ID nuevos. El ID incluye la huella de ese texto
-cifrado; si lo usas con otro texto, la verificación fallará. Puedes descifrar el
-mismo texto varias veces con el mismo ID.
+Every encryption creates a new plan and ID. The ID includes the fingerprint of that
+ciphertext; using it with another ciphertext fails verification. You can decrypt the
+same ciphertext multiple times with the same ID.
 
-### ¿Qué pasa si pierdo el ID?
+### What happens if I lose the ID?
 
-No hay recuperación. El ID es la única forma de reconstruir el plan y la semilla
-(sin contraseña) o de abrir el plan (con contraseña).
+There is no recovery. The ID is the only way to reconstruct the plan and seed
+(without a password) or to open the plan (with a password).
 
-### ¿Puedo elegir cuántas capas se aplican?
+### Can I choose how many layers are applied?
 
-Sí: `-l 1..16`. Sin `-l`, se eligen entre 7 y 12 métodos distintos.
+Yes: `-l 1..16`. Without `-l`, 7 to 12 distinct methods are selected.
 
-### ¿Necesito permisos de administrador?
+### Do I need Administrator privileges?
 
-No. El instalador de Windows copia a `%LOCALAPPDATA%` y modifica solo el PATH del
-usuario. El de Linux copia a `~/.local/bin`. Puedes ejecutar el binario directamente
-sin instalar.
+No. The Windows installer copies to `%LOCALAPPDATA%` and modifies only the user
+PATH. The Linux installer copies to `~/.local/bin`. You can run the binary directly
+without installing.
 
-### ¿Necesito .NET, Python o Visual C++ Redistributable?
+### Do I need .NET, Python, or the Visual C++ Redistributable?
 
-No. Windows usa CRT estática y Linux enlace estático; no hay dependencias de
-runtime para el usuario final.
+No. Windows uses the static CRT and Linux uses static linking; there are no runtime
+dependencies for the end user.
 
-### ¿Funciona en Windows 7?
+### Does it work on Windows 7?
 
-La versión recomendada es Windows 10/11. No se ha validado Windows 7; el binario
-usa APIs modernas del sistema y `bcrypt.dll`.
+The recommended version is Windows 10/11. Windows 7 has not been validated; the
+binary uses modern system APIs and `bcrypt.dll`.
 
-### ¿Funciona en ARM64?
+### Does it work on ARM64?
 
-El binario Linux puede compilarse en ARM64 con `./build.sh --static`. En Windows
-ARM64, el ejecutable x64 funciona bajo emulación; no se publica un binario ARM64
-nativo en esta versión.
+The Linux binary can be built on ARM64 with `./build.sh --static`. On Windows ARM64,
+the x64 executable runs under emulation; this version does not publish a native
+ARM64 binary.
 
-### ¿Por qué hay 26 métodos?
+### Why are there 26 methods?
 
-El repertorio mezcla cifrados reales (ChaCha20, SHA-256-CTR, RC4), transformaciones
-clásicas y codificaciones. El objetivo es la diversidad de capas y el
-oscurecimiento; ChaCha20 y la contraseña aportan la parte criptográfica fuerte.
+The repertoire mixes real ciphers (ChaCha20, SHA-256-CTR, RC4), classic
+transformations, and encodings. The goal is layer diversity and obfuscation;
+ChaCha20 and the optional password provide the strong cryptographic component.
 
-### ¿Puedo añadir métodos?
+### Can I add methods?
 
-Sí. Añade una entrada en `methods()` con un ID nuevo (no reutilices IDs), implementa
-`forward`/`inverse` y `applies`, y añade pruebas de round-trip. Mantén la
-compatibilidad de los IDs existentes.
+Yes. Add an entry in `methods()` with a new ID (do not reuse IDs), implement
+`forward`/`inverse` and `applies`, and add round-trip tests. Preserve compatibility
+with existing IDs.
 
-### ¿Dónde están los créditos?
+### Where are the credits?
 
-En la salida de `kruptos --help`, en la sección **CRÉDITOS / CREDITS** de los tres
-idiomas. El banner y `version` no los muestran.
+In `kruptos --help`, under the **CREDITS** section in all three languages. The banner
+and `version` do not show them.
 
-### ¿La interfaz está en español?
+### Is the interface available in English?
 
-Sí, y también en inglés y portugués. Usa `--lang es|en|pt`, `KRUPTOS_LANG` o el
-comando `language` dentro del shell.
+Yes, and also in Spanish and Portuguese. Use `--lang en|es|pt`, `KRUPTOS_LANG`, or the
+`language` command inside the shell.
 
 ---
 
-## 🛠️ Solución de problemas
+## 🛠️ Troubleshooting
 
 ### Windows
 
-- **`kruptos` no se reconoce:** abre una PowerShell nueva; el PATH del usuario se
-  actualiza al iniciar sesión. Para la sesión actual:
+- **`kruptos` is not recognized:** open a new PowerShell window; the user PATH is
+  updated at sign-in. For the current session:
 
   ```powershell
   $env:Path = [Environment]::GetEnvironmentVariable('Path','Machine') + ';' + [Environment]::GetEnvironmentVariable('Path','User')
   ```
 
-- **La política de ejecución bloquea `install.ps1`:** ejecuta `install.cmd`, que
-  usa `-ExecutionPolicy Bypass` solo para ese proceso. También:
+- **Execution policy blocks `install.ps1`:** run `install.cmd`, which uses
+  `-ExecutionPolicy Bypass` only for that process. Alternatively:
 
   ```powershell
   powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1
   ```
 
-- **SmartScreen:** el `.exe` no está firmado. “Más información → Ejecutar de todas
-  formas”.
+- **SmartScreen:** the `.exe` is not code-signed. Choose “More info → Run anyway”.
 
-- **`kruptos` resuelve a una copia antigua:** `Get-Command kruptos` muestra la ruta;
-  reinstala con `install.cmd` y verifica con `kruptos version`.
+- **`kruptos` resolves to an old copy:** `Get-Command kruptos` shows the path;
+  reinstall with `install.cmd` and verify with `kruptos version`.
 
-- **Mensaje demasiado largo:** usa `-f`/`-o` o una tubería; la línea de comandos de
-  Windows tiene un límite práctico de ~32 KB.
+- **Message too long:** use `-f`/`-o` or a pipe; the Windows command line has a
+  practical limit of about 32 KB.
 
 ### Linux
 
-- **`Permission denied` al ejecutar `install.sh` o `kruptos`:**
+- **`Permission denied` when running `install.sh` or `kruptos`:**
 
   ```bash
   chmod +x install.sh kruptos
   ```
 
-- **`kruptos: command not found`:** añade `~/.local/bin` al PATH:
+- **`kruptos: command not found`:** add `~/.local/bin` to PATH:
 
   ```bash
   echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.profile
   ```
 
-  Abre una terminal nueva o recarga el perfil.
+  Open a new terminal or reload the profile.
 
-- **El binario no arranca:** comprueba la arquitectura (`uname -m`) y que el paquete
-  corresponda; el binario estático es específico de la arquitectura.
+- **The binary does not start:** check the architecture (`uname -m`) and make sure
+  the package matches. The static binary is architecture-specific.
 
-- **La compilación `--static` falla:** faltan las librerías estáticas del compilador
-  (`libstdc++.a`, `libgcc.a`). Instálalas solo en la máquina de compilación; el
-  binario resultante no las necesita en el destino.
+- **The `--static` build fails:** the compiler's static libraries
+  (`libstdc++.a`, `libgcc.a`) are missing. Install them only on the build machine;
+  the resulting binary does not need them on the target.
 
-### Errores de Kruptos
+### Kruptos Errors
 
-- **“ID inválido” / checksum:** el ID está incompleto o mal copiado. Se aceptan
-  minúsculas y espacios, pero no caracteres que no pertenezcan a Base32.
-- **“No se pudo revertir la capa N”:** el texto no corresponde a ese ID o está
-  corrupto. Copia el texto cifrado completo; no añadas caracteres.
-- **“Contraseña incorrecta o ID alterado”:** revisa la contraseña; el MAC protege el
-  plan.
-- **“Verificación de integridad fallida”:** el texto se modificó o no es el que
-  generó ese ID.
-- **“Falta el ID”:** en modo no interactivo, pasa `-i`; no se puede pedir por consola
-  si stdin está ocupado por una tubería.
-- **“No hay consola interactiva para pedir la contraseña”:** usa `--passphrase` en
+- **“Invalid ID” / checksum:** the ID is incomplete or mistyped. Lowercase and
+  whitespace are accepted, but characters outside Base32 are not.
+- **“Could not reverse layer N”:** the ciphertext does not match the ID or is
+  corrupted. Copy the complete ciphertext; do not add characters.
+- **“Wrong password or altered ID”:** check the password; the MAC protects the plan.
+- **“Integrity check failed”:** the text was modified or was not produced by that ID.
+- **“Missing ID”:** in non-interactive mode, pass `-i`; the prompt cannot be used if
+  stdin is occupied by a pipe.
+- **“No interactive console to ask for the password”:** use `--passphrase` in
   scripts.
 
 ---
 
 ## 🗺️ Roadmap
 
-- Firmar digitalmente los binarios de Windows y Linux.
-- Publicar paquetes `.deb`, `.rpm` y `.AppImage` además del TAR estático.
-- Binario nativo ARM64 para Windows.
-- Fuzzing formal de decodificadores e IDs.
-- Auditoría de seguridad externa.
-- Completions para PowerShell/Bash y página `man`.
-- Endurecimiento opcional de memoria (bloqueo/zeroización).
-- Builds reproducibles y verificación de artefactos.
-- Más métodos y un registro extensible sin romper IDs existentes.
+- Code-sign the Windows and Linux binaries.
+- Publish `.deb`, `.rpm`, and `.AppImage` packages in addition to the static TAR.
+- Native ARM64 Windows binary.
+- Formal fuzzing of decoders and IDs.
+- External security audit.
+- PowerShell/Bash completions and a `man` page.
+- Optional memory hardening (locking/zeroization).
+- Reproducible builds and artifact verification.
+- More methods and an extensible registry without breaking existing IDs.
 
-Las ideas del roadmap no son compromisos de entrega; prioriza según el uso real.
-
----
-
-## 👨‍💻 Autor
-
-Desarrollado por **Yuri Alexander Pagel Krüger**.
-
-Proyecto: **Kruptos** · Repositorio sugerido: **Kruptos-CLI**.
-
-Enfoque: criptografía aplicada, herramientas de línea de comandos y portabilidad
-sin dependencias.
+Roadmap items are ideas, not delivery commitments; prioritize based on real usage.
 
 ---
 
-## 📄 Licencia
+## 👨‍💻 Author
 
-Uso libre para fines educativos y personales. El software se proporciona **“tal
-cual”**, sin garantías de ningún tipo.
+Developed by **Yuri Alexander Pagel Krüger**.
 
-Este repositorio no incluye todavía un archivo `LICENSE`. Si vas a publicarlo,
-añade la licencia que prefieras (MIT, Apache-2.0, GPL-3.0, etc.) y actualiza esta
-sección. Hasta entonces, no se conceden derechos implícitos más allá de los que
-permita la ley aplicable.
+Project: **Kruptos** · Suggested repository: **Kruptos-CLI**.
+
+Focus: applied cryptography, command-line tooling, and dependency-free
+portability.
+
+---
+
+## 📄 License
+
+Free to use for educational and personal purposes. The software is provided **“as
+is”**, without warranties of any kind.
+
+This repository does not yet include a `LICENSE` file. If you publish it, add the
+license of your choice (MIT, Apache-2.0, GPL-3.0, etc.) and update this section.
+Until then, no rights are granted beyond those permitted by applicable law.
