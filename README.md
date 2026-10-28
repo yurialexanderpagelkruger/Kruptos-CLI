@@ -939,8 +939,14 @@ ldd ./dist/kruptos
 │   └── workflows/
 │       └── build.yml              CI: Windows + Linux
 ├── docs/
-│   ├── windows-powershell.svg     Windows terminal capture
-│   └── linux-terminal.svg         Linux terminal capture
+│   ├── windows-1-start.svg        Windows start screen
+│   ├── windows-2-encrypt.svg      Windows encryption
+│   ├── windows-3-decrypt.svg      Windows decryption
+│   ├── windows-4-inspect.svg      Windows ID inspection
+│   ├── linux-1-start.svg          Linux start screen
+│   ├── linux-2-encrypt.svg        Linux encryption
+│   ├── linux-3-decrypt.svg        Linux decryption
+│   └── linux-4-inspect.svg        Linux ID inspection
 ├── src/
 │   ├── main.cpp                   Entry point (UTF-16 -> UTF-8 on Windows)
 │   ├── cli.cpp/.h                 Commands, options, shell, JSON
