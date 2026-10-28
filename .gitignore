@@ -1,0 +1,36 @@
+# Build outputs
+bin/
+obj/
+build/
+build-static/
+build-cmake/
+dist/
+out/
+x64/
+x86/
+Win32/
+Kruptos/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.VC.db
+*.VC.opendb
+
+# Binaries and packages
+*.exe
+*.dll
+*.pdb
+*.ilk
+*.obj
+*.lib
+*.exp
+Kruptos-windows-*.zip
+Kruptos-linux-*.tar.gz
+
+# Temporary files
+tmp_*
+*.log
+Thumbs.db
+.DS_Store
