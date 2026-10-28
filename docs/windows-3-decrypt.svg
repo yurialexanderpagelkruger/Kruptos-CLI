@@ -7,7 +7,7 @@
   <circle cx="72" cy="21" r="7" fill="#27c93f"/>
   <text x="96" y="26" fill="#c9d1d9" font-family="Segoe UI, Arial, sans-serif" font-size="14">Windows PowerShell — kruptos</text>
   <text x="26" y="82" xml:space="preserve" font-family="'Cascadia Mono', 'Consolas', monospace" font-size="16">
-    <tspan x="26" dy="0" fill="#4fc1ff">PS C:\Users\demo&gt; <tspan fill="#e6edf3">kruptos decrypt -i KR1-... -m "..." -v</tspan></tspan>
+    <tspan x="26" dy="0" fill="#4fc1ff">PS C:\Users\Yuri&gt; <tspan fill="#e6edf3">kruptos decrypt -i KR1-... -m "..." -v</tspan></tspan>
     <tspan x="26" dy="24" fill="#4ec9b0">[+] Message decrypted and verified (10 layers reversed).</tspan>
     <tspan x="26" dy="24" fill="#4fc1ff">[*] Reverse order applied:</tspan>
     <tspan x="26" dy="24" fill="#e6edf3">      1.   percent           Encoding</tspan>

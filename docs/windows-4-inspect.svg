@@ -7,7 +7,7 @@
   <circle cx="72" cy="21" r="7" fill="#27c93f"/>
   <text x="96" y="26" fill="#c9d1d9" font-family="Segoe UI, Arial, sans-serif" font-size="14">Windows PowerShell — kruptos</text>
   <text x="26" y="82" xml:space="preserve" font-family="'Cascadia Mono', 'Consolas', monospace" font-size="16">
-    <tspan x="26" dy="0" fill="#4fc1ff">PS C:\Users\demo&gt; <tspan fill="#e6edf3">kruptos inspect -i KR1-...</tspan></tspan>
+    <tspan x="26" dy="0" fill="#4fc1ff">PS C:\Users\Yuri&gt; <tspan fill="#e6edf3">kruptos inspect -i KR1-...</tspan></tspan>
     <tspan x="26" dy="24" fill="#4fc1ff">[*] Plan ID:</tspan>
     <tspan x="26" dy="24" fill="#8b949e">  KR1-AEAAUIYB-FAQCUCAK-AQBCOUKY-5UV73CWO-...</tspan>
     <tspan x="26" dy="24" fill="#e6edf3"></tspan>
